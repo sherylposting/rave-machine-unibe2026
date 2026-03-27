@@ -1,0 +1,10 @@
+# git-specific files/folders
+.git/
+
+# VS Code specific files/folders
+.vscode
+bin/
+
+# OS-specific files
+.DS_Store
+.thumbs
