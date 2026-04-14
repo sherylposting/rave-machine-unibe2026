@@ -7,13 +7,22 @@
 | Henryk Viana | VianaH | henryk.viana@unifr.ch |
 | Emma Oper | OperE | emma.oper@unifr.ch |
 | Sheryl Lin | LinS | sheryl.lin@unibe.ch|
+| Zakhar Petrenko | PetrenkoZ | zakhar.petrenko@unifr.ch |
 
-## Project Ideas (Initial)
-- Optical [Heart Rate Monitor](https://docs.m5stack.com/en/unit/heart) to measure/record heart rate.
-- [VOC/eCO2 Monitor](https://shop.m5stack.com/products/tvoc-eco2-gas-unit-sgp30) to measure/record breathing rate.
-- [Camera](https://docs.m5stack.com/en/unit/Unit%20Camera) for object/face recognition.
-- [Gesture Recognition Sensor](https://shop.m5stack.com/products/unit-gesture-recognition-sensor-paj7620u2) for interface control.
+## Project using M5Stack 6-Axis IMU
 
+**Main Idea**: 
+
+Music-generating Rave Machine: using two M5Stack 6-Axis IMU to create a music-generating device that allows users to create and manipulate music through physical movements and gestures. The device is designed as a wearable or handheld gadget that responds to the user's movements, translating them into musical notes, rhythms, and effects. Users could dance, wave their hands, or perform specific gestures to create unique sounds and compositions in real-time by modulating sound speed, frequency, and volume using gestures from the IMU unit tied to both wrists. 
+
+*Keywords*: music generation, real-time interaction, wearable technology, gesture recognition, sound manipulation
+
+> **Alternative Idea**: In case the main idea is too difficult to implement in practice, the M5Stack 6-Axis IMU could act as pedometer, tracking the user's steps and providing feedback on their physical activity, or as a fall/bike crash detector, alerting emergency contacts in case of a fall or bike crash.
+
+### Links
+- [6-Axis IMU Unit(MPU6886)](https://shop.m5stack.com/products/6-axis-imu-unitmpu6886)
+- [IMU Mini Unit Documentation](https://docs.m5stack.com/en/unit/imu)
+- [IMU Mini Unit API](https://docs.m5stack.com/en/uiflow/blockly/unit/imu)
 
 ## Adding files
 
@@ -31,10 +40,10 @@ git push -uf origin main
 
 * [Set up project integrations](https://diuf-gitlab.unifr.ch/sop2026-projects/hveosl/-/settings/integrations)
 
-
 ***
 ***
-# README.md Template
+***
+# Provided README.md Template from GitLab
 
 ## Name
 Choose a self-explaining name for your project.
