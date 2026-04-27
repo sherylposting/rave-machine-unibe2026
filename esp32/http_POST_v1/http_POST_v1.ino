@@ -1,0 +1,68 @@
+#include <WiFi.h>
+#include <HTTPClient.h>
+
+/// instructions: put in your appropriate ssid, password, serverURL values
+// 1 - run http_server.py on your laptop python, probably don't use WSL
+// 2 - send this script
+// 3 - open tools -> serial monitor to check the ESP's output
+// in the terminal where you started your server, it should start saying "POST / HTTP/1.1" 200 - Received: hello from esp32
+
+const char* ssid = "Salt_2GHz_9D3CDE"; /// put in your wifi name here
+const char* password = "9MbLGtUX3TYuJXL6qt"; /// put in your wifi password here
+
+const char* serverURL = "http://192.168.1.24:8000"; /// put in your IPv4 address in the format: http://192.168.1.xxx:8000
+
+void connect_wifi(void) {
+    Serial.println("Connecting to WiFi...");
+
+    WiFi.begin(ssid, password);
+
+    while (WiFi.status() != WL_CONNECTED) {
+        delay(500);
+        Serial.print(".");
+    }
+
+    Serial.println("\nConnected!");
+    Serial.print("ESP32 IP: ");
+    Serial.println(WiFi.localIP());
+}
+
+void send_data(const char* msg) {
+    HTTPClient http;
+
+    http.begin(serverURL);
+    http.addHeader("Content-Type", "text/plain");
+
+    int code = http.POST((uint8_t*)msg, strlen(msg));
+
+    Serial.print("HTTP response code: ");
+    Serial.println(code);
+
+    if (code > 0) {
+        String payload = http.getString();
+        Serial.print("Server reply: ");
+        Serial.println(payload);
+    } else if (code == -1) {
+        Serial.println("Request failed: probably a network or firewall issue");
+    } else if (code == -5) {
+        Serial.println("Request failed: connection lost during request");
+    } else {
+        Serial.println("Request failed");
+    }
+
+    http.end();
+}
+
+void setup(void) {
+    Serial.begin(115200);
+    delay(1000);  // give time for monitor to attach
+    
+    Serial.println("Starting...");
+    
+    connect_wifi();
+}
+
+void loop(void) {
+    send_data("hello from esp32");
+    delay(1000);
+}

@@ -40,6 +40,13 @@ git push -uf origin main
 
 * [Set up project integrations](https://diuf-gitlab.unifr.ch/sop2026-projects/hveosl/-/settings/integrations)
 
+## Instructions for use:
+* Repo structure:
+    * esp32/ contains Arduino files to be pushed to the microprocessor
+    * server/ contains server-side files (.py) to be run on your laptop
+* **Flashing light test:** use esp32/test_flash.ino. Requires installation of the Adafruit Neopixel library
+* **Simple HTTP POST protocol:** open esp32/http_POST.ino to see instructions for use. First run server/http_server.py on laptop, then enter the appropriate ipconfig settings into http_POST.ino.
+
 ***
 ***
 ***
