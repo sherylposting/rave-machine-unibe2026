@@ -1,30 +1,33 @@
 #include <M5Unified.h>
+#include <Wire.h>
+#include <I2C_MPU6886.h>
 
 m5::imu_data_t imuData;
+I2C_MPU6886 IMU;
 
 void setup() {
     auto cfg = M5.config();
     M5.begin(cfg);
     Serial.begin(115200);
 
-    if (M5.Imu.begin()) {
-        Serial.println("IMU is ready!");
-    } else {
-        Serial.println("IMU failed to start. Check connection!");
-    }
+    Wire.begin(26, 32); // SDA, SCL pins for the IMU to M5 Atom Lite Grove Port
+    IMU.begin();
 }
 
 void loop() {
-    M5.Imu.update();
-    imuData = M5.Imu.getImuData();
+    M5.update(); // Keeps the internal state updated
 
-    Serial.printf("\n Acc X = %6.2f  \n", imuData.accel.x);
-    Serial.printf(" Acc Y = %6.2f  \n", imuData.accel.y);
-    Serial.printf(" Acc Z = %6.2f  \n\n", imuData.accel.z);
+    // Create variables to hold our data
+    float ax, ay, az; // Accelerometer (Gravity/Tilt)
+    float gx, gy, gz; // Gyroscope (Rotation speed)
 
-    Serial.printf(" Gyr X = %6.2f  \n", imuData.gyro.x);
-    Serial.printf(" Gyr Y = %6.2f  \n", imuData.gyro.y);
-    Serial.printf(" Gyr Z = %6.2f  \n", imuData.gyro.z);
+    // Grab the latest data from the sensor
+    M5.Imu.getAccel(&ax, &ay, &az);
+    M5.Imu.getGyro(&gx, &gy, &gz);
 
-    delay(1000);
+    // Print the Accelerometer data to the Serial Monitor
+    Serial.printf("Accel: %5.2f, %5.2f, %5.2f | Gyro: %5.2f, %5.2f, %5.2f\n", 
+                  ax, ay, az, gx, gy, gz);
+
+    delay(100); // Slow down the text so it's readable
 } 
