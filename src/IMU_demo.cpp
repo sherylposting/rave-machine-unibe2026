@@ -3,6 +3,9 @@
 #include <I2C_MPU6886.h>
 
 I2C_MPU6886 IMU;
+const int SDA_pin = 26;
+const int SCL_pin = 32;
+
 const int polling_rate = 100;
 
 void setup() {
@@ -10,7 +13,7 @@ void setup() {
     M5.begin(cfg);
     Serial.begin(115200);
 
-    Wire.begin(26, 32); // SDA, SCL pins for the IMU to M5 Atom Lite Grove Port
+    Wire.begin(SDA_pin, SCL_pin); // SDA, SCL pins for the IMU to M5 Atom Lite Grove Port
     IMU.begin();
 
     // Print CSV header once at start (NOTE: use DCORE_DEBUG_LEVEL=1 in platformio.ini)
