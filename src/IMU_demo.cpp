@@ -2,8 +2,8 @@
 #include <Wire.h>
 #include <I2C_MPU6886.h>
 
-m5::imu_data_t imuData;
 I2C_MPU6886 IMU;
+const int polling_rate = 100;
 
 void setup() {
     auto cfg = M5.config();
@@ -12,6 +12,9 @@ void setup() {
 
     Wire.begin(26, 32); // SDA, SCL pins for the IMU to M5 Atom Lite Grove Port
     IMU.begin();
+
+    // Print CSV header once at start (NOTE: use DCORE_DEBUG_LEVEL=1 in platformio.ini)
+    Serial.println("acc_x, acc_y, acc_z, gyro_x, gyro_y, gyro_z\n");
 }
 
 void loop() {
@@ -22,12 +25,11 @@ void loop() {
     float gx, gy, gz; // Gyroscope (Rotation speed)
 
     // Grab the latest data from the sensor
-    M5.Imu.getAccel(&ax, &ay, &az);
-    M5.Imu.getGyro(&gx, &gy, &gz);
+    IMU.getAccel(&ax, &ay, &az);
+    IMU.getGyro(&gx, &gy, &gz);
 
     // Print the Accelerometer data to the Serial Monitor
-    Serial.printf("Accel: %5.2f, %5.2f, %5.2f | Gyro: %5.2f, %5.2f, %5.2f\n", 
-                  ax, ay, az, gx, gy, gz);
-
-    delay(100); // Slow down the text so it's readable
+    Serial.printf("%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\n", 
+                    ax, ay, az, gx, gy, gz);
+    delay(polling_rate); // Slows down text for readability
 } 
