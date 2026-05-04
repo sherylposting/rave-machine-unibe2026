@@ -44,6 +44,13 @@ git push -uf origin main
 * Repo structure:
     * esp32/ contains Arduino files to be pushed to the microprocessor
     * server/ contains server-side files (.py) to be run on your laptop
+* PlatformIO setup:
+    * Install VSCode
+    * Install PlatformIO extension
+    * Open this folder as project in PlatformIO
+    * Upload platformio.ini to initialize libraries
+    * Upload your desired program
+    * Note: it is somewhat buggy if multiple .cpp files are present. If it starts running the wrong program, rename everything else to .cpp.bak except for the one you want to run
 * **Flashing light test:** use esp32/test_flash.ino. Requires installation of the Adafruit Neopixel library
 * **Simple HTTP POST protocol:** open esp32/http_POST.ino to see instructions for use. First run server/http_server.py on laptop, then enter the appropriate ipconfig settings into http_POST.ino.
 

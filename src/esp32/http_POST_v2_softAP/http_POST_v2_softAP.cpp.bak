@@ -2,10 +2,10 @@
 #include <HTTPClient.h>
 
 /// instructions: put in your appropriate ssid, password, serverURL values
-// 1 - run http_server.py on your laptop python, probably don't use WSL
-// 2 - send this script
-// 3 - open tools -> serial monitor to check the ESP's output
-// in the terminal where you started your server, it should start saying "POST / HTTP/1.1" 200 - Received: hello from esp32
+// 1 - upload this program. this will start the ESP's wifi. it will also start pushing the http request and giving error -1
+// 2 - connect your laptop to the wifi 
+// 3 - run http_server.py on your laptop, probably don't use WSL
+// in the terminal where you started your server, it should start saying "POST / HTTP/1.1" 200 - Received: ...
 
 const char* ssid = "ESP32-HVEOSL"; /// put in your wifi name here
 const char* password = "12345678"; /// put in your wifi password here
