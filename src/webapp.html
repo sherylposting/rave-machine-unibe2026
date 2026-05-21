@@ -1,9 +1,13 @@
-<!-- fetches the data in JSON format from localhost:8000/latest -->
+<!-- 
+    uses the native Web Audio API to play a looping arpeggiator.
+    fetches the sensor data in JSON format from localhost:8000/latest (http GET)
+    acc_x values control the beep frequency / pitch, acc_y values control the bpm
+-->
 
 <!-- instructions:
- cd to the folder containing this .html script
- run in cli: python -m http.server 5500
- in browser go to: http://localhost:5500/rave_machine.html
+    1 - cd to the folder containing this .html script
+    2 - run in terminal: python -m http.server 5500 (yes http.server with the dot!)
+    3 - in browser go to: http://localhost:5500/rave_machine.html
 -->
 
 <!doctype html>
@@ -24,18 +28,15 @@
 
     <script>
     let audioCtx;
-    let osc;
     let started = false;
-    let beepStarted = false;
     let bpm = 120;
     let freq = 240;
     let nextTime = 0;
 
-    function initAudio() {
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    }
+    // ---- FUNCTION DEFINITIONS ---- //
 
-    function schedulebeep(time, input_freq) {
+    function scheduleBeep(time, input_freq) {
+        // creates one single beep sound
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
 
@@ -48,46 +49,47 @@
         osc.connect(gain);
         gain.connect(audioCtx.destination);
 
+        // each note is 0.2 in length
         osc.start(time);
         osc.stop(time + 0.2);
     }
 
-    function playbeeps() {
-        if (beepStarted) return;
-        beepStarted = true;
-
-        nextTime = audioCtx.currentTime;
-        beepLoop();
-    }
-
     function beepLoop() {
+        // play the arpeggio
         const interval = 60 / bpm;
 
-        while (nextTime < audioCtx.currentTime + 0.1) {
-            schedulebeep(nextTime, freq);
-            schedulebeep(nextTime+interval, freq*1.2);
-            schedulebeep(nextTime+2*interval, freq*1.333);
-            schedulebeep(nextTime+3*interval, freq*1.5);
-            nextTime += interval*4;
-    }
+        // iterate through each note in the sequence (ratios)
+        const notes = [1.000, 1.200, 1.333, 1.500];
 
+        while (nextTime < audioCtx.currentTime + 0.1) {
+            for (const note of notes) {
+                scheduleBeep(nextTime, freq * note);
+                nextTime += interval; // move forward one interval before beginning the next note
+            }
+        }
     requestAnimationFrame(beepLoop);
     }
 
     function startAudio() {
         if (started) return;
         started = true;
-
-        initAudio();
+        
+        // init the audio API
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         audioCtx.resume();
 
-        playbeeps();
+        // start the beep loops
+        nextTime = audioCtx.currentTime;
+        beepLoop();
     }
+
+    // ---- MAIN UPDATE LOOP ---- //
 
     async function update() {
         if (!started) return;
 
         try {
+            // http GET request to retrieve the data in JSON format
             const response = await fetch("http://localhost:8000/latest");
             const data = await response.json();
 
@@ -114,6 +116,7 @@
         }
     }
 
+    // repeatedly update at an interval of 50
     setInterval(update, 50);
 
     </script>

@@ -26,6 +26,7 @@ void getData(char* buffer, int size) {
     IMU.getGyro(&gx, &gy, &gz);
 
     // Print the IMU data to Serial Monitor
+    // prints it as a string in JSON format
     snprintf(buffer, size, "{\n\"acc_x\": %.2f,\n\"acc_y\": %.2f,\n\"acc_z\": %.2f,\n\"gyro_x\": %.2f,\n\"gyro_y\": %.2f,\n\"gyro_z\": %.2f\n}", 
                             ax, ay, az, gx, gy, gz);
 } 
