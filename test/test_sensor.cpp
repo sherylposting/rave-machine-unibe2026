@@ -1,5 +1,6 @@
 #include <unity.h>
 #include <cstring>
+#include <Arduino.h>
 
 #include "sensor.h"
 
@@ -9,24 +10,27 @@ void test_getData(void){
     char dataBuffer[128];
     getData(dataBuffer, sizeof(dataBuffer));
 
-    TEST_ASSERT_TRUE(std::strstr(dataBuffer, "ax") != NULL);
+    Serial.print("getData returned: ");
+    Serial.println(dataBuffer);
+
+    TEST_ASSERT_TRUE(std::strstr(dataBuffer, "acc_x") != NULL);
 }
 
 int runUnityTests(void) {
   UNITY_BEGIN();
   RUN_TEST(test_getData);
+  RUN_TEST(test_getData);
   return UNITY_END();
 }
 
-//For ESP-IDF framework
-void app_main() {
+/**
+  * For Arduino framework
+  */
+void setup() {
+  // Wait ~2 seconds before the Unity test runner
+  // establishes connection with a board Serial interface
+  delay(2000);
+
   runUnityTests();
 }
-
-void setup() {
-    // empty
-}
-
-void loop() {
-    // empty
-}
+void loop() {}

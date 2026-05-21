@@ -1,6 +1,8 @@
 # instructions:
-    # 1 - run main.cpp to initialize the softAP hotspot
-    # 2 - connect your laptop to the softAP wifi ("ESP32-HVEOSLZP")
+    # 1 - run this script on your laptop
+    # 2 - run main.cpp to initialize the softAP hotspot
+    # 3 - connect your laptop to the softAP wifi ("ESP32-HVEOSLZP", pass: 12345678)
+# in the terminal where you started your server, it should start saying "POST / HTTP/1.1" 200 - Received ...
 
 from http.server import BaseHTTPRequestHandler, HTTPServer
 

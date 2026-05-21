@@ -13,8 +13,5 @@ bin/
 .vscode/launch.json
 .vscode/ipch
 
-# python specific files/folders
-src/__pycache__/
-
 # PlatformIO specific files/folders
 .pio
