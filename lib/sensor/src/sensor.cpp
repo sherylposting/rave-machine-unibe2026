@@ -11,9 +11,6 @@ const int SCL_pin = 32;
 void initIMU() {
     Wire.begin(SDA_pin, SCL_pin); // SDA, SCL pins for the IMU to M5 Atom Lite Grove Port
     IMU.begin();
-
-    // Print CSV header once at start (NOTE: use DCORE_DEBUG_LEVEL=1 in platformio.ini)
-    Serial.println("acc_x, acc_y, acc_z, gyro_x, gyro_y, gyro_z\n");
 }
 
 void getData(char* buffer, int size) {
@@ -25,8 +22,7 @@ void getData(char* buffer, int size) {
     IMU.getAccel(&ax, &ay, &az);
     IMU.getGyro(&gx, &gy, &gz);
 
-    // Print the IMU data to Serial Monitor
-    // prints it as a string in JSON format
+    // Save the IMU data as a string in JSON format
     snprintf(buffer, size, "{\n\"acc_x\": %.2f,\n\"acc_y\": %.2f,\n\"acc_z\": %.2f,\n\"gyro_x\": %.2f,\n\"gyro_y\": %.2f,\n\"gyro_z\": %.2f\n}", 
                             ax, ay, az, gx, gy, gz);
 } 
