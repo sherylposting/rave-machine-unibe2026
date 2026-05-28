@@ -56,15 +56,11 @@ Music-generating Rave Machine: using the M5Stack 6-Axis IMU to create a real-tim
 ├── lib
 │   ├── README
 │   ├── sensor
-│   │   ├── include
-│   │   │   └── sensor.h
-│   │   └── src
-│   │       └── sensor.cpp
-│   └── server
-│       ├── include
-│       │   └── server.h
-│       └── src
-│           └── server.cpp
+│   │   ├── sensor.h
+|   |   └── sensor.cpp
+│   ├── server
+│   │   ├── server.h
+|   |   └── server.cpp
 ├── platformio.ini
 ├── src
 │   ├── http_server.py
