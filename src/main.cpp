@@ -5,7 +5,6 @@
 const int polling_delay = 10;
 char dataBuffer[128];
 
-
 void setup() {
     auto cfg = M5.config();
     M5.begin(cfg);

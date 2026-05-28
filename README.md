@@ -1,7 +1,5 @@
-# The HVEOSL Project
+# The HVEOSLZP Project
 
-
-## Group Members
 | Name | Username | Email |
 |------|----------|-------|
 | Henryk Viana | VianaH | henryk.viana@unifr.ch |
@@ -9,76 +7,66 @@
 | Sheryl Lin | LinS | sheryl.lin@unibe.ch|
 | Zakhar Petrenko | PetrenkoZ | zakhar.petrenko@unifr.ch |
 
-## Project using M5Stack 6-Axis IMU
 
-**Main Idea**: 
+Music-generating Rave Machine: using the M5Stack 6-Axis IMU to create a real-time device that allows users to manipulate music through physical gestures. The device is a wearable bracelet which tracks accelerometer readings along the x- and y-axis, and sends them to a locally-hosted web app. The app plays a lovely arpeggio using the native Web Audio API, which can then be modulated in pitch and rhythm according to the user's movements. Will you be the next Rave Machine virtuoso?
 
-Music-generating Rave Machine: using two M5Stack 6-Axis IMU to create a music-generating device that allows users to create and manipulate music through physical movements and gestures. The device is designed as a wearable or handheld gadget that responds to the user's movements, translating them into musical notes, rhythms, and effects. Users could dance, wave their hands, or perform specific gestures to create unique sounds and compositions in real-time by modulating sound speed, frequency, and volume using gestures from the IMU unit tied to both wrists. 
+**Links**:
+* [6-Axis IMU Unit(MPU6886)](https://shop.m5stack.com/products/6-axis-imu-unitmpu6886)
+* [IMU Mini Unit Documentation](https://docs.m5stack.com/en/unit/imu)
+* [IMU Mini Unit API](https://docs.m5stack.com/en/uiflow/blockly/unit/imu)
 
-*Keywords*: music generation, real-time interaction, wearable technology, gesture recognition, sound manipulation
-
-> **Alternative Idea**: In case the main idea is too difficult to implement in practice, the M5Stack 6-Axis IMU could act as pedometer, tracking the user's steps and providing feedback on their physical activity, or as a fall/bike crash detector, alerting emergency contacts in case of a fall or bike crash.
-
-### Links
-- [6-Axis IMU Unit(MPU6886)](https://shop.m5stack.com/products/6-axis-imu-unitmpu6886)
-- [IMU Mini Unit Documentation](https://docs.m5stack.com/en/unit/imu)
-- [IMU Mini Unit API](https://docs.m5stack.com/en/uiflow/blockly/unit/imu)
-
-## Adding files
-
-* [Create](https://docs.gitlab.com/user/project/repository/web_editor/#create-a-file) or [upload](https://docs.gitlab.com/user/project/repository/web_editor/#upload-a-file) files
-* [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
-
-```
-cd existing_repo
-git remote add origin https://diuf-gitlab.unifr.ch/sop2026-projects/hveosl.git
-git branch -M main
-git push -uf origin main
-```
-
-## Integrating project tools
-
-* [Set up project integrations](https://diuf-gitlab.unifr.ch/sop2026-projects/hveosl/-/settings/integrations)
 
 ## Instructions for use:
-* Repo structure:
-    * esp32/ contains Arduino files to be pushed to the microprocessor
-    * server/ contains server-side files (.py) to be run on your laptop
-* PlatformIO setup:
+1. PlatformIO setup:
     * Install VSCode
     * Install PlatformIO extension
     * Open this folder as project in PlatformIO
-    * Upload platformio.ini to initialize libraries
+    * Upload *platformio.ini* to initialize libraries
     * Upload your desired program
-    * Note: it is somewhat buggy if multiple .cpp files are present. If it starts running the wrong program, rename everything else to .cpp.bak except for the one you want to run
-* **Flashing light test:** use esp32/test_flash.ino. Requires installation of the Adafruit Neopixel library
-* **Simple HTTP POST protocol:** open esp32/http_POST.ino to see instructions for use. First run server/http_server.py on laptop, then enter the appropriate ipconfig settings into http_POST.ino.
+    * Optional: to run Unity tests, click on the test button on the toolbar at the bottom, or run `pio test -v`
+2. Server setup:
+    * Check *lib/server/src/server.cpp* and make sure that the server config values look good. Example (default):
 
-***
-***
-***
-# Provided README.md Template from GitLab
+    ```python
+    const char* ssid = "ESP32-HVEOSLZP";
+    const char* password = "12345678";
+    const char* serverURL = "http://192.168.4.2:8000";
+    ```
 
-## Name
-Choose a self-explaining name for your project.
+    * On your laptop, run *src/http_server.py*. This will start hosting a server at localhost:8000.
+    * Upload *src/main.cpp* to the Atom Lite. This will start running:
+        * setupWifi() (from *lib/server*) - starts the Atom's SoftAP Wifi hotspot
+        * getData() (from *lib/sensor*) - retrieves IMU acceleration and gyroscope values and stores them as a string in JSON format. The raw data will also print to the serial monitor.
+        * sendDataToServer() (from *lib/sensor*) - sends an http POST request to send the data to the server you started, which can be accessed at localhost:8000/latest.
+    * If the setup worked, in the terminal where you started your server, it should start saying "POST / HTTP/1.1" 200 - Received: ...
+3. Webapp setup:
+    ```bash
+    # go to the directory containing webapp.html
+    cd src
+    # invoke the standard python web server
+    python -m http.server 5500
+    # now in your browser (chrome), go to: 
+    http://localhost:5500/rave_machine.html
+    ```
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+### Directory structure
+```
+.
+├── README.md
+├── lib
+│   ├── README
+│   ├── sensor
+│   │   ├── sensor.h
+|   |   └── sensor.cpp
+│   ├── server
+│   │   ├── server.h
+|   |   └── server.cpp
+├── platformio.ini
+├── src
+│   ├── http_server.py
+│   ├── main.cpp
+│   └── webapp.html
+└── test
+    ├── README
+    └── test_sensor.cpp
+```
