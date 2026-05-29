@@ -14,6 +14,12 @@
 <html>
 <head>
   <title>Rave Machine</title>
+  <style>
+    body {
+        color:white;
+        background-color:black;
+    }
+  </style>
 </head>
 
     <body>
@@ -32,6 +38,8 @@
     let bpm = 120;
     let freq = 240;
     let nextTime = 0;
+    let colorIndex = 0;
+    const colors = ['#F22388', '#0BC21C', '#138ADB', '#F2DC29'];
 
     // ---- FUNCTION DEFINITIONS ---- //
 
@@ -67,7 +75,8 @@
                 nextTime += interval; // move forward one interval before beginning the next note
             }
         }
-    requestAnimationFrame(beepLoop);
+
+    requestAnimationFrame(beepLoop); // create a repeated loop
     }
 
     function startAudio() {
@@ -81,6 +90,11 @@
         // start the beep loops
         nextTime = audioCtx.currentTime;
         beepLoop();
+
+        setInterval(() => {
+            document.body.style.backgroundColor = colors[colorIndex % colors.length]
+            colorIndex++;
+        }, 800);
     }
 
     // ---- MAIN UPDATE LOOP ---- //
@@ -99,10 +113,10 @@
 
             // ---------- SOUND CONTROL ----------
             // map acc_x -> frequency
-            freq = 100 + x * 60;
+            freq = 100 + x * 200;
 
             // map accY -> bpm
-            bpm = Math.max(500, Math.abs(y)*700);
+            bpm = 500 + Math.abs(y)*700;
 
             // ---------- DISPLAY VALUES ----------
             document.getElementById("sensor_value").textContent =
