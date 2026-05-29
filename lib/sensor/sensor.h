@@ -2,6 +2,6 @@
 #define IMU_MANAGER_H
 
 void initIMU();
-void getData(char* buffer, int size);
+void getData(char* buffer, int size, float* ax, float* ay, float* az);
 
 #endif

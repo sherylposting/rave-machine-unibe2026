@@ -13,7 +13,7 @@ void initIMU() {
     IMU.begin();
 }
 
-void getData(char* buffer, int size) {
+void getData(char* buffer, int size, float* ax_out, float* ay_out, float* az_out) {
     // Create variables to hold our data
     float ax, ay, az; // Accelerometer (Gravity/Tilt)
     float gx, gy, gz; // Gyroscope (Rotation speed)
@@ -22,7 +22,13 @@ void getData(char* buffer, int size) {
     IMU.getAccel(&ax, &ay, &az);
     IMU.getGyro(&gx, &gy, &gz);
 
+    // Pass raw accelerometer data back to main
+    if (ax_out) { *ax_out = ax; }
+    if (ay_out) { *ay_out = ay; }
+    if (az_out) { *az_out = az; }
+
     // Save the IMU data as a string in JSON format
     snprintf(buffer, size, "{\n\"acc_x\": %.2f,\n\"acc_y\": %.2f,\n\"acc_z\": %.2f,\n\"gyro_x\": %.2f,\n\"gyro_y\": %.2f,\n\"gyro_z\": %.2f\n}", 
                             ax, ay, az, gx, gy, gz);
 } 
+
