@@ -1,0 +1,119 @@
+<!-- fetches the data in JSON format from localhost:8000/latest -->
+
+<!-- instructions:
+ cd to the folder containing this .html script
+ run in cli: python -m http.server 5500
+ in browser go to: http://localhost:5500/rave_machine.html
+-->
+
+<!doctype html>
+<html>
+<head>
+  <title>Rave Machine</title>
+</head>
+
+<body>
+
+<h1>Rave Machine</h1>
+
+<button onclick="startAudio()">Start Audio</button>
+
+<div>Sensor values: <span id="sensor_value">waiting...</span></div>
+
+<div>Sound values: <span id="sound_value">waiting...</span></div>
+
+<script>
+let audioCtx;
+let osc;
+let started = false;
+
+function initAudio() {
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+}
+
+let drumStarted = false;
+let bpm = 120;
+let freq = 240;
+let nextTime = 0;
+
+function scheduleKick(time, input_freq) {
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+
+  osc.type = "sawtooth";
+  osc.frequency.setValueAtTime(input_freq, time);
+
+  gain.gain.setValueAtTime(0.8, time);
+  gain.gain.exponentialRampToValueAtTime(0.001, time + 0.2);
+
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+
+  osc.start(time);
+  osc.stop(time + 0.2);
+}
+
+function startDrums() {
+  if (drumStarted) return;
+  drumStarted = true;
+
+  nextTime = audioCtx.currentTime;
+  drumLoop();
+}
+
+function drumLoop() {
+  const interval = 60 / bpm;
+
+  while (nextTime < audioCtx.currentTime + 0.1) {
+    scheduleKick(nextTime, freq);
+    nextTime += interval;
+  }
+
+  requestAnimationFrame(drumLoop);
+}
+
+function startAudio() {
+  if (started) return;
+  started = true;
+
+  initAudio();
+  audioCtx.resume();
+
+  startDrums();
+
+}
+
+async function update() {
+  if (!started) return;
+
+  try {
+    const response = await fetch("http://localhost:8000/latest");
+    const data = await response.json();
+
+    // ---------- PICK SENSOR AXES ----------
+    const x = data.accX;
+    const y = data.accY;
+
+    // show something useful
+    document.getElementById("sensor_value").textContent =
+      `accX: ${x.toFixed(2)} | accY: ${y.toFixed(2)}`;
+
+    document.getElementById("sound_value").textContent =
+      `freq: ${freq.toFixed(2)} | bpm: ${bpm.toFixed(2)}`;
+
+    // ---------- MAP → SOUND ----------
+    freq = 240 + x * 200;   // pitch control
+
+    // map accY → BPM (clamped)
+    bpm = Math.max(600, Math.abs(y)*1000);
+
+  } catch (err) {
+    console.log("Fetch error:", err);
+  }
+}
+
+setInterval(update, 50);
+</script>
+
+</body>
+</html>
